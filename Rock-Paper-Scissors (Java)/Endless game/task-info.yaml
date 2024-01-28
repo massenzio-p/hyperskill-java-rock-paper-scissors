@@ -142,6 +142,35 @@ files:
       
       }
     learner_created: false
+  - name: src/rockpaperscissors/ShapeOption.java
+    visible: true
+    text: |
+      package rockpaperscissors;
+      
+      public enum ShapeOption {
+          ROCK(2, 1),
+          PAPER(0, 2),
+          SCISSORS(1, 0);
+      
+          private int prevOrdinal;
+          private int nextOrdinal;
+      
+          ShapeOption(int prevOrdinal, int nextOrdinal) {
+              this.prevOrdinal = prevOrdinal;
+              this.nextOrdinal = nextOrdinal;
+          }
+      
+          // 1 - wins; 0 - draw; -1 - loses
+          public int playWith(ShapeOption shape) {
+              if (shape.ordinal() == prevOrdinal) return 1;
+              if (shape.ordinal() == nextOrdinal) return -1;
+              return 0;
+          }
+      }
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/314/stages/1766/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Sun, 28 Jan 2024 13:34:05 UTC"
 record: -1

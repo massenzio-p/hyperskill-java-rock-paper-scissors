@@ -9,9 +9,25 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ShapeOption userShape = ShapeOption.valueOf(scanner.nextLine().toUpperCase());
-        ShapeOption computerShape = computeResponseShape(userShape);
-        printWinner(userShape, computerShape);
+
+        ShapeOption userShape;
+        ShapeOption computerShape;
+        String userInput;
+        while (true) {
+            userInput = scanner.nextLine();
+            if (userInput.equals("!exit")) {
+                break;
+            }
+            try {
+                userShape = ShapeOption.valueOf(userInput.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid input");
+                continue;
+            }
+            computerShape = computeResponseShape(userShape);
+            printWinner(userShape, computerShape);
+        }
+        System.out.println("Bye!");
         scanner.close();
     }
 
@@ -23,7 +39,7 @@ public class Main {
         } else if (gameRes == 1) {
             System.out.printf("Well done. The computer chose %s and failed%n", computerStringShape);
         } else {
-            System.out.printf("There is a draw (%s)\n%n", computerStringShape);
+            System.out.printf("There is a draw (%s)%n", computerStringShape);
         }
     }
 
