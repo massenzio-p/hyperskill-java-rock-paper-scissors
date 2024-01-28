@@ -57,6 +57,12 @@ files:
           }
       }
     learner_created: false
+  - name: src/rockpaperscissors/ShapeOption.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/314/stages/1764/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Sun, 28 Jan 2024 11:57:12 UTC"
 record: -1
