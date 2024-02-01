@@ -340,6 +340,135 @@ files:
           }
       }
     learner_created: false
+  - name: src/rockpaperscissors/ScoreRepository.java
+    visible: true
+    text: |
+      package rockpaperscissors;
+      
+      import java.io.*;
+      import java.nio.charset.StandardCharsets;
+      import java.util.Arrays;
+      import java.util.concurrent.atomic.AtomicInteger;
+      import java.util.function.UnaryOperator;
+      import java.util.stream.Collectors;
+      
+      public class ScoreRepository implements AutoCloseable {
+      
+          private final File file;
+      
+          public ScoreRepository(File file, String name) {
+              this.file = file;
+              try {
+                  if (!this.file.isFile()) {
+                      boolean created = file.createNewFile();
+                  }
+              } catch (IOException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+      
+          @Override
+          public void close() {
+          }
+      
+          public void putScore(String playerName,
+                               UnaryOperator<Integer> reducer) {
+              findAndProcessScoreLine(playerName, (accessFile, line, idx) -> {
+                  if (line == null) {
+                      accessFile.write(String.format(
+                              "%s %d%n",
+                              playerName,
+                              reducer.apply(0)).getBytes(StandardCharsets.UTF_8)
+                      );
+                      return;
+                  }
+      
+                  String[] stringTokens = line.split(" ");
+                  Integer currentScore = Integer.parseInt(stringTokens[1]);
+                  stringTokens[1] = reducer.apply(currentScore).toString();
+                  accessFile.seek(idx);
+                  String toSave = Arrays.stream(stringTokens)
+                          .collect(Collectors.joining(" "));
+                  toSave = toSave + "\n";
+                  accessFile.write(toSave.getBytes(StandardCharsets.UTF_8));
+              });
+          }
+      
+          private void findAndProcessScoreLine(String playerName, FoundFileLineCallback callback) {
+              try (var accessFile = new RandomAccessFile(this.file, "rw")) {
+                  String line;
+                  int idx = 0;
+                  while ((line = accessFile.readLine()) != null) {
+                      if (line.contains(playerName)) {
+                          callback.processLine(accessFile, line, idx);
+                          return;
+                      }
+                      idx += line.length() + 1;
+                  }
+                  callback.processLine(accessFile, line, idx);
+              } catch (IOException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+      
+          public int getScore(String playerName) {
+              AtomicInteger score = new AtomicInteger();
+              findAndProcessScoreLine(playerName, (accessFile, line, idx) -> {
+                  int storedScore = 0;
+                  if (line != null) {
+                      String[] stringTokens = line.split(" ");
+                      storedScore = Integer.parseInt(stringTokens[1]);
+                  }
+                  score.set(storedScore);
+              });
+              return score.get();
+          }
+      }
+    learner_created: true
+  - name: src/rockpaperscissors/ShapeOption.java
+    visible: true
+    text: |
+      package rockpaperscissors;
+      
+      public enum ShapeOption {
+          ROCK(2, 1),
+          PAPER(0, 2),
+          SCISSORS(1, 0);
+      
+          private int prevOrdinal;
+          private int nextOrdinal;
+      
+          ShapeOption(int prevOrdinal, int nextOrdinal) {
+              this.prevOrdinal = prevOrdinal;
+              this.nextOrdinal = nextOrdinal;
+          }
+      
+          // 1 - wins; 0 - draw; -1 - loses
+          public int playWith(ShapeOption shape) {
+              if (shape.ordinal() == prevOrdinal) return 1;
+              if (shape.ordinal() == nextOrdinal) return -1;
+              return 0;
+          }
+      }
+    learner_created: true
+  - name: src/rockpaperscissors/FoundFileLineCallback.java
+    visible: true
+    text: |
+      package rockpaperscissors;
+      
+      import java.io.IOException;
+      import java.io.RandomAccessFile;
+      
+      @FunctionalInterface
+      public interface FoundFileLineCallback {
+      
+          void processLine(RandomAccessFile accessFile, String line, int idx) throws IOException;
+      }
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/24619#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Thu, 01 Feb 2024 18:07:39 UTC"
 record: -1
