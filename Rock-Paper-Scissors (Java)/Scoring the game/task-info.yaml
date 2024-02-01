@@ -192,6 +192,41 @@ files:
           }
       }
     learner_created: false
-feedback_link: https://hyperskill.org/projects/314/stages/1767/implement#comment
-status: Unchecked
+  - name: src/rockpaperscissors/ShapeOption.java
+    visible: true
+    text: |
+      package rockpaperscissors;
+      
+      public enum ShapeOption {
+          ROCK(2, 1),
+          PAPER(0, 2),
+          SCISSORS(1, 0);
+      
+          private int prevOrdinal;
+          private int nextOrdinal;
+      
+          ShapeOption(int prevOrdinal, int nextOrdinal) {
+              this.prevOrdinal = prevOrdinal;
+              this.nextOrdinal = nextOrdinal;
+          }
+      
+          // 1 - wins; 0 - draw; -1 - loses
+          public int playWith(ShapeOption shape) {
+              if (shape.ordinal() == prevOrdinal) return 1;
+              if (shape.ordinal() == nextOrdinal) return -1;
+              return 0;
+          }
+      }
+    learner_created: true
+  - name: src/rockpaperscissors/ScoreRepository.java
+    visible: true
+    learner_created: true
+  - name: src/rockpaperscissors/FoundFileLineCallback.java
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/24618#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 01 Feb 2024 16:29:43 UTC"
 record: -1
